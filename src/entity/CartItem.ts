@@ -1,0 +1,44 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { ShoppingSession } from "./ShoppingSession";
+import { Product } from "./Product";
+import { IsInt, Min } from "class-validator";
+
+@Entity({ name: "cart_item" })
+export class CartItem {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column()
+  @IsInt()
+  @Min(0)
+  quantity: number;
+
+  @ManyToOne(() => ShoppingSession, (session) => session.cartItems)
+  session: ShoppingSession;
+
+  @OneToOne(() => Product)
+  @JoinColumn()
+  product: Product;
+
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)",
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)",
+    onUpdate: "CURRENT_TIMESTAMP(6)",
+  })
+  modifiedAt: Date;
+}
