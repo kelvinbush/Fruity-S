@@ -1,7 +1,13 @@
-version: 3.7
+version: "3.7"
 services:
-  rest-api:
-    container_name: rest-api
+  rest-apl:
+    container_name: rest-apl
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
+    build:
+      context: ./
+    ports:
+      - "1446:1446"

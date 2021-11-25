@@ -14,10 +14,7 @@ const deserializeUser = async (
 		get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
 
 	if (!accessToken) {
-		logger.info(req);
-
-		// redirect back to client
-		res.redirect(config.get("origin"));
+		next();
 		return;
 	}
 	try {

@@ -10,7 +10,11 @@ import routes from "./routes";
 import * as dotenv from "dotenv";
 
 dotenv.config({path: __dirname + '/.env'});
-
+// @ts-ignore
+let private_key = "";
+if (process.env.FIREBASE_PRIVATE_KEY !== undefined) {
+    private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+}
 
 admin.initializeApp({
     credential: admin.credential.cert({
@@ -19,7 +23,7 @@ admin.initializeApp({
         "project_id": process.env.FIREBASE_PROJECT_ID,
         "private_key_id": process.env.FIREBASE_PRIVATE_KEY_ID,
         // @ts-ignore
-        "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        "private_key": private_key,
         "client_email": process.env.FIREBASE_CLIENT_EMAIL,
         "client_id": process.env.FIREBASE_CLIENT_ID,
         "auth_uri": process.env.FIREBASE_AUTH_URI,

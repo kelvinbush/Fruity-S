@@ -13,7 +13,7 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
