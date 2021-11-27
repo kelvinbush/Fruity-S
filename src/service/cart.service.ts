@@ -79,6 +79,15 @@ export type CartUpdate = {
 	quantity: number;
 };
 
+export async function deleteCartItem(id: string) {
+	try {
+		await getRepository(CartItem).delete({ id: id });
+	} catch (error: any) {
+		logger.error("Couldn't delete item from cart");
+		logger.error(error.message);
+	}
+}
+
 export async function updateCartItem(cart: CartUpdate) {
 	try {
 		const cartItem = await findCartById(cart.id);
