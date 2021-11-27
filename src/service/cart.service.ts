@@ -5,7 +5,7 @@ import { CartItem } from "../entity/CartItem";
 import { getRepository } from "typeorm";
 import logger from "../utils/logger";
 export type CartAdd = {
-	userId: string;
+	username: string;
 	productId: string;
 	quantity: number;
 };
@@ -52,7 +52,7 @@ export async function addToCart(item: CartAdd) {
 	//get product
 	const product = await findProductById(item.productId);
 	//get session
-	const session = await findOrCreateShoppingSession(item.userId);
+	const session = await findOrCreateShoppingSession(item.username);
 	if (product && session) {
 		try {
 			// create cartItem

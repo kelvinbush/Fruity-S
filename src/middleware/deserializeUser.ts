@@ -19,7 +19,6 @@ const deserializeUser = async (
 	}
 	try {
 		res.locals.user = await admin.auth().verifyIdToken(accessToken);
-    logger.info("deserializeUser");
 		return next();
 	} catch (err) {
 		console.log(err);
