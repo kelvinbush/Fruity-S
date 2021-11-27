@@ -25,7 +25,12 @@ export async function findOrCreateShoppingSession(
 			const sessionRepo = getRepository(ShoppingSession);
 			const newShopSesion = new ShoppingSession();
 			newShopSesion.total = 1;
-			return await sessionRepo.save(newShopSesion);
+			const session = await sessionRepo.save(newShopSesion);
+			await userRepo.update(
+				{ username: username },
+				{ shoppingSession: session }
+			);
+			return session;
 		}
 	} catch (e: any) {
 		logger.error("Couldn't find or create shopping session");
@@ -66,5 +71,36 @@ export async function addToCart(item: CartAdd) {
 			logger.error("Couldn't add to cart");
 			logger.error(e.message);
 		}
+	}
+}
+
+export type CartUpdate = {
+	id: string;
+	quantity: number;
+};
+
+export async function updateCartItem(cart: CartUpdate) {
+	try {
+		const cartItem = await findCartById(cart.id);
+		if (cartItem) {
+			await getRepository(CartItem).update(
+				{ id: cartItem.id },
+				{ quantity: cart.quantity }
+			);
+		}
+	} catch (error: any) {
+		logger.error("Couldn't update cart");
+		logger.error(error.message);
+	}
+}
+
+export async function findCartById(id: string): Promise<CartItem> {
+	try {
+		const cartRepo = getRepository(CartItem);
+		return await cartRepo.findOne({ where: { id: id } });
+	} catch (error) {
+		logger.error("Couldn't update cart");
+		logger.error(error.message);
+		return;
 	}
 }

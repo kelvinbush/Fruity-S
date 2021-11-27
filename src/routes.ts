@@ -9,7 +9,7 @@ import {
 	getAllProducts,
 	updateItem,
 } from "./controller/product.controller";
-import { addingToCart } from "./controller/cart.controller";
+import { addingToCart, updateCart } from "./controller/cart.controller";
 
 function routes(app: Express) {
 	app.get("/healthcheck", (req: Request, res: Response) =>
@@ -21,7 +21,7 @@ function routes(app: Express) {
 	app.get("/api/product", requireUser, getAllProducts);
 	app.post("/api/product/update", requireUser, updateItem);
 	app.post("/api/addCart", requireUser, addingToCart);
-	app.post("/api/order", requireUser)
+	app.post("/api/updateCart", requireUser, updateCart);
 }
 
 export default routes;
