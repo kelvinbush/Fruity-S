@@ -25,8 +25,7 @@ export class OrderItems {
   @ManyToOne(() => OrderDetails, (order) => order.items)
   detail: OrderDetails;
 
-  @OneToOne(() => Product)
-  @JoinColumn()
+  @ManyToOne(() => Product, (prod) => prod.orders)
   product: Product;
 
   @CreateDateColumn({

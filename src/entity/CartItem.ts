@@ -25,8 +25,7 @@ export class CartItem {
   @ManyToOne(() => ShoppingSession, (session) => session.cartItems)
   session: ShoppingSession;
 
-  @OneToOne(() => Product)
-  @JoinColumn()
+  @ManyToOne(() => Product, (prod) => prod.cartItems)
   product: Product;
 
   @CreateDateColumn({

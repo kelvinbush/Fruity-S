@@ -12,6 +12,7 @@ import {
 import {
 	addingToCart,
 	deleteFromCart,
+	getCartItems,
 	updateCart,
 } from "./controller/cart.controller";
 
@@ -27,6 +28,7 @@ function routes(app: Express) {
 	app.post("/api/addCart", requireUser, addingToCart);
 	app.post("/api/updateCart", requireUser, updateCart);
 	app.delete("/api/updateCart", requireUser, deleteFromCart);
+	app.get("/api/updateCart", requireUser, getCartItems);
 }
 
 export default routes;

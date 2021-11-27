@@ -13,26 +13,25 @@ import { Favourite } from "./Favourite";
 
 @Entity({ name: "favourite_items" })
 export class FavouriteItems {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+	@PrimaryGeneratedColumn("uuid")
+	id: string;
 
-  @ManyToOne(() => Favourite, (item) => item.favouriteProducts)
-  favourite: Favourite;
+	@ManyToOne(() => Favourite, (item) => item.favouriteProducts)
+	favourite: Favourite;
 
-  @OneToOne(() => Product)
-  @JoinColumn()
-  product: Product;
+	@ManyToOne(() => Product, (prod) => prod.favs)
+	product: Product;
 
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-  })
-  createdAt: Date;
+	@CreateDateColumn({
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP(6)",
+	})
+	createdAt: Date;
 
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-    onUpdate: "CURRENT_TIMESTAMP(6)",
-  })
-  modifiedAt: Date;
+	@UpdateDateColumn({
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP(6)",
+		onUpdate: "CURRENT_TIMESTAMP(6)",
+	})
+	modifiedAt: Date;
 }

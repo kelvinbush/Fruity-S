@@ -2,7 +2,7 @@ import { ShoppingSession } from "./../entity/ShoppingSession";
 import { Product } from "./../entity/Product";
 import { User } from "./../entity/User";
 import { CartItem } from "../entity/CartItem";
-import { getRepository } from "typeorm";
+import { getRepository, LockNotSupportedOnGivenDriverError } from "typeorm";
 import logger from "../utils/logger";
 export type CartAdd = {
 	username: string;
@@ -109,6 +109,43 @@ export async function findCartById(id: string): Promise<CartItem> {
 		return await cartRepo.findOne({ where: { id: id } });
 	} catch (error) {
 		logger.error("Couldn't update cart");
+		logger.error(error.message);
+		return;
+	}
+}
+
+export async function getAllCartItems(username: string): Promise<Product[]> {
+	try {
+		const session = await findOrCreateShoppingSession(username);
+		const cartItems = await getRepository(ShoppingSession).findOne(
+			{
+				id: session.id,
+			},
+			{ relations: ["cartItems"] }
+		);
+		let products: Product[] = [];
+		await Promise.all(
+			cartItems.cartItems.map(async (item) =>
+				products.push(await getCart(item.id))
+			)
+		);
+		return products;
+	} catch (error: any) {
+		logger.error("Couldn't get cart items");
+		logger.error(error.message);
+		return;
+	}
+}
+
+async function getCart(id: string) {
+	try {
+		const cart = await getRepository(CartItem).findOne(
+			{ id: id },
+			{ relations: ["product"] }
+		);
+		return cart.product;
+	} catch (error: any) {
+		logger.error("Couldn't get cart items");
 		logger.error(error.message);
 		return;
 	}

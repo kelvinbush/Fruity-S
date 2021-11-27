@@ -3,6 +3,7 @@ import { Request } from "express";
 import {
 	addToCart as addToCartService,
 	deleteCartItem,
+	getAllCartItems,
 	updateCartItem,
 } from "../service/cart.service";
 import logger from "../utils/logger";
@@ -37,6 +38,18 @@ export async function deleteFromCart(req: Request, res: Response) {
 		await deleteCartItem(req.body.id);
 		res.send({ message: "deletion successfull" });
 		return;
+	} catch (e: any) {
+		logger.error("Couldn't delete from cart controller");
+		logger.error(e.message);
+		res.sendStatus(500);
+		return;
+	}
+}
+
+export async function getCartItems(req: Request, res: Response) {
+	try {
+		const result = await getAllCartItems(res.locals.user.uid);
+		res.send({ cartItems: result });
 	} catch (e: any) {
 		logger.error("Couldn't delete from cart controller");
 		logger.error(e.message);
