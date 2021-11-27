@@ -19,7 +19,7 @@ export class CartItem {
 
   @Column()
   @IsInt()
-  @Min(0)
+  @Min(1)
   quantity: number;
 
   @ManyToOne(() => ShoppingSession, (session) => session.cartItems)

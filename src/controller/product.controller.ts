@@ -23,6 +23,7 @@ export async function getAllProducts(req: Request, res: Response) {
   try {
     const result = await getAllProductsFromDb();
     res.send({ result });
+    logger.info(result);
     return;
   } catch (e: any) {
     logger.error(e.message);

@@ -12,6 +12,7 @@ export async function getCurrentUser(req: Request, res: Response) {
 			email: user.email,
 			uid: user.username,
 		});
+		logger.info(user);
 		return;
 	}
 	res.send({ message: "Failed to get User" }).sendStatus(500);

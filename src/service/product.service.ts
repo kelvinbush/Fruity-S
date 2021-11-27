@@ -25,7 +25,7 @@ export async function addProductToDB(item: NewProduct) {
     const category = await categoryRepository.findOne({
       where: { name: item.category },
     });
-    let newCategory;
+    let newCategory: ProductCategory;
     if (category) {
       newCategory = category;
     } else {
