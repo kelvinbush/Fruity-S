@@ -2,7 +2,7 @@ import { Response } from "express";
 import { Request } from "express";
 import {
 	addToCart as addToCartService,
-	deleteCartItem,
+	removeItemFromCart,
 	getAllCartItems,
 	updateCartItem,
 } from "../service/cart.service";
@@ -33,9 +33,9 @@ export async function updateCart(req: Request, res: Response) {
 	}
 }
 
-export async function deleteFromCart(req: Request, res: Response) {
+export async function removeFromCart(req: Request, res: Response) {
 	try {
-		await deleteCartItem(req.body.id);
+		await removeItemFromCart(req.body.id);
 		res.send({ message: "deletion successfull" });
 		return;
 	} catch (e: any) {

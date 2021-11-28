@@ -79,7 +79,7 @@ export type CartUpdate = {
 	quantity: number;
 };
 
-export async function deleteCartItem(id: string) {
+export async function removeItemFromCart(id: string) {
 	try {
 		await getRepository(CartItem).delete({ id: id });
 	} catch (error: any) {
@@ -114,7 +114,7 @@ export async function findCartById(id: string): Promise<CartItem> {
 	}
 }
 
-export async function getAllCartItems(username: string): Promise<Product[]> {
+export async function carts(username: string): Promise<CartItem[]> {
 	try {
 		const session = await findOrCreateShoppingSession(username);
 		const cartItems = await getRepository(ShoppingSession).findOne(
@@ -123,11 +123,21 @@ export async function getAllCartItems(username: string): Promise<Product[]> {
 			},
 			{ relations: ["cartItems"] }
 		);
+
+		return cartItems.cartItems;
+	} catch (error) {
+		logger.error("Couldn't get carts");
+		logger.error(error.message);
+		return;
+	}
+}
+
+export async function getAllCartItems(username: string): Promise<Product[]> {
+	try {
+		const cartItems = await carts(username);
 		let products: Product[] = [];
 		await Promise.all(
-			cartItems.cartItems.map(async (item) =>
-				products.push(await getCart(item.id))
-			)
+			cartItems.map(async (item) => products.push(await getCart(item.id)))
 		);
 		return products;
 	} catch (error: any) {
@@ -137,9 +147,9 @@ export async function getAllCartItems(username: string): Promise<Product[]> {
 	}
 }
 
-async function getCart(id: string) {
+export async function getCart(id: string) {
 	try {
-		const cart = await getRepository(CartItem).findOne(
+		const cart: CartItem = await getRepository(CartItem).findOne(
 			{ id: id },
 			{ relations: ["product"] }
 		);

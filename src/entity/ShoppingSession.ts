@@ -18,7 +18,7 @@ export class ShoppingSession {
 	@Min(1)
 	total: number;
 
-	@OneToMany(() => CartItem, (item) => item.session, { cascade: ["remove"] })
+	@OneToMany(() => CartItem, (item) => item.session)
 	cartItems: CartItem[];
 
 	@CreateDateColumn({
