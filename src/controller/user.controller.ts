@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { findOrCreateUser, updateAddress } from "../service/user.service";
 import logger from "../utils/logger";
-import { User } from "../entity/User";
 
 export async function getCurrentUser(req: Request, res: Response) {
 	const userId = res.locals.user.uid;

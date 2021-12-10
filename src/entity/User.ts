@@ -46,7 +46,7 @@ export class User {
 	@JoinColumn()
 	shoppingSession: ShoppingSession;
 
-	@OneToOne(() => Favourite)
+	@OneToOne(() => Favourite, { eager: true })
 	@JoinColumn()
 	favourites: Favourite;
 

@@ -2,42 +2,23 @@ import { ShoppingSession } from "./../entity/ShoppingSession";
 import { Product } from "./../entity/Product";
 import { User } from "./../entity/User";
 import { CartItem } from "../entity/CartItem";
-import { getRepository, getConnection } from "typeorm";
+import {
+	getRepository,
+	getConnection,
+	createQueryBuilder,
+	getManager,
+} from "typeorm";
 import logger from "../utils/logger";
+import {
+	getAllCartItemsQuery,
+	insertItemToCartQuery,
+	InsertToCartType,
+} from "../utils/raw-queries";
 export type CartAdd = {
-	username: string;
 	productId: string;
 	quantity: number;
+	sessionId: string;
 };
-
-export async function findOrCreateShoppingSession(
-	username: string
-): Promise<ShoppingSession> {
-	try {
-		const userRepo = getRepository(User);
-		const user = await userRepo.findOne({
-			where: { username: username },
-			relations: ["shoppingSession"],
-		});
-		if (user.shoppingSession) {
-			return user.shoppingSession;
-		} else {
-			const sessionRepo = getRepository(ShoppingSession);
-			const newShopSesion = new ShoppingSession();
-			newShopSesion.total = 1;
-			const session = await sessionRepo.save(newShopSesion);
-			await userRepo.update(
-				{ username: username },
-				{ shoppingSession: session }
-			);
-			return session;
-		}
-	} catch (e: any) {
-		logger.error("Couldn't find or create shopping session");
-		logger.error(e.message);
-		return;
-	}
-}
 
 export async function findProductById(id: string): Promise<Product> {
 	try {
@@ -54,23 +35,23 @@ export async function findProductById(id: string): Promise<Product> {
 }
 
 export async function addToCart(item: CartAdd) {
-	//get product
-	const product = await findProductById(item.productId);
-	//get session
-	const session = await findOrCreateShoppingSession(item.username);
-	if (product && session) {
-		try {
-			// create cartItem
-			const cartRepo = getRepository(CartItem);
-			const newCartItem = new CartItem();
-			newCartItem.product = product;
-			newCartItem.quantity = item.quantity;
-			newCartItem.session = session;
-			await cartRepo.save(newCartItem);
-		} catch (e: any) {
-			logger.error("Couldn't add to cart");
-			logger.error(e.message);
-		}
+	try {
+		return await getConnection()
+			.createQueryBuilder()
+			.insert()
+			.into(CartItem)
+			.values([
+				{
+					quantity: item.quantity,
+					sessionId: item.sessionId,
+					productId: item.productId,
+				},
+			])
+			.execute();
+	} catch (e: any) {
+		logger.error("Couldn't add to cart");
+		logger.error(e);
+		return;
 	}
 }
 
@@ -156,24 +137,25 @@ export async function getAllCartItems(username: string): Promise<Product[]> {
 }
 
 export async function allCartGetUpdated(sessionId: string) {
-	const connection = getConnection();
-	const queryString = `select cart.id as id,
-       cart.quantity as quantity,
-       p.name,
-       p.imageUrl,
-       p.price
-	from cart_item cart
-         join product p on p.id = cart.productId and cart.sessionId = ${sessionId}`;
-
 	try {
-		return await connection.query(queryString);
+		return await getManager()
+			.createQueryBuilder(CartItem, "cart")
+			.leftJoinAndSelect("cart.product", "p")
+			.select([
+				"cart.id",
+				"cart.quantity",
+				"p.name",
+				"p.imageUrl",
+				"p.price",
+			])
+			.where("cart.sessionId = :sessionId", { sessionId: sessionId })
+			.getMany();
 	} catch (error) {
 		logger.error("Couldn't get cart items");
-		logger.error(error.message);
+		logger.error(error);
 		return;
 	}
 }
-
 export async function getCart(id: string) {
 	try {
 		const cart: CartItem = await getRepository(CartItem).findOne(

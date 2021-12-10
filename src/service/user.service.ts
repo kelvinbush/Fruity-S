@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import admin from "firebase-admin";
 import logger from "../utils/logger";
 import { UserAddress } from "../entity/UserAddress";
+import { Favourite } from "../entity/Favourite";
 
 type FirebaseUser = {
 	displayName: string | undefined;
@@ -41,17 +42,21 @@ export async function findOrCreateUser(input: string): Promise<User | void> {
 		const fUser = await getFirebaseUser(input);
 		if (fUser) {
 			const sessionRepo = getRepository(ShoppingSession);
+			const favouriteRepo = getRepository(Favourite);
 			const newShopSesion = new ShoppingSession();
 			newShopSesion.total = 1;
 			const session = await sessionRepo.save(newShopSesion);
+			const favourite = new Favourite();
+			const newFavourite = await favouriteRepo.save(favourite);
 			const newUser = userRepository.create({
 				firstName: fUser.displayName,
 				username: fUser.uid,
 				email: fUser.email,
 				imageUrl: fUser.photoUrl,
 				shoppingSession: session,
+				favourites: newFavourite,
 			});
-      
+
 			return await userRepository
 				.save(newUser)
 				.catch((err) => console.log(err));
