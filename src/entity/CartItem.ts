@@ -22,9 +22,7 @@ export class CartItem {
 	@Min(1)
 	quantity: number;
 
-	@ManyToOne(() => ShoppingSession, (session) => session.cartItems, {
-		onDelete: "CASCADE",
-	})
+	@ManyToOne(() => ShoppingSession, (session) => session.cartItems)
 	session: ShoppingSession;
 
 	@ManyToOne(() => Product, (prod) => prod.cartItems)

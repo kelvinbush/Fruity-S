@@ -42,7 +42,7 @@ export class User {
 	@JoinColumn()
 	address: UserAddress;
 
-	@OneToOne(() => ShoppingSession)
+	@OneToOne(() => ShoppingSession, { eager: true })
 	@JoinColumn()
 	shoppingSession: ShoppingSession;
 

@@ -2,7 +2,7 @@ import { ShoppingSession } from "./../entity/ShoppingSession";
 import { Product } from "./../entity/Product";
 import { User } from "./../entity/User";
 import { CartItem } from "../entity/CartItem";
-import { getRepository, LockNotSupportedOnGivenDriverError } from "typeorm";
+import { getRepository, getConnection } from "typeorm";
 import logger from "../utils/logger";
 export type CartAdd = {
 	username: string;
@@ -79,9 +79,17 @@ export type CartUpdate = {
 	quantity: number;
 };
 
-export async function removeItemFromCart(id: string) {
+export async function removeItemFromCart(id: string, username: string) {
 	try {
-		await getRepository(CartItem).delete({ id: id });
+		const user = await getRepository(User).findOne(
+			{ username: username },
+			{ relations: ["shoppingSession"] }
+		);
+
+		await getRepository(CartItem).delete({
+			id: id,
+			session: user.shoppingSession,
+		});
 	} catch (error: any) {
 		logger.error("Couldn't delete item from cart");
 		logger.error(error.message);
@@ -141,6 +149,25 @@ export async function getAllCartItems(username: string): Promise<Product[]> {
 		);
 		return products;
 	} catch (error: any) {
+		logger.error("Couldn't get cart items");
+		logger.error(error.message);
+		return;
+	}
+}
+
+export async function allCartGetUpdated(sessionId: string) {
+	const connection = getConnection();
+	const queryString = `select cart.id as id,
+       cart.quantity as quantity,
+       p.name,
+       p.imageUrl,
+       p.price
+	from cart_item cart
+         join product p on p.id = cart.productId and cart.sessionId = ${sessionId}`;
+
+	try {
+		return await connection.query(queryString);
+	} catch (error) {
 		logger.error("Couldn't get cart items");
 		logger.error(error.message);
 		return;

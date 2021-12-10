@@ -7,11 +7,7 @@ export async function getCurrentUser(req: Request, res: Response) {
 	const userId = res.locals.user.uid;
 	const user = await findOrCreateUser(userId);
 	if (user) {
-		res.send({
-			firstName: user.firstName,
-			email: user.email,
-			uid: user.username,
-		});
+		res.send({ user });
 		logger.info(user);
 		return;
 	}
@@ -25,9 +21,7 @@ export async function updateUserAddress(req: Request, res: Response) {
 	const userId = res.locals.user.uid;
 	const user = await updateAddress(userId, req.body);
 	if (user) {
-		res.send({ message: "User Address updated successfully" }).sendStatus(
-			200
-		);
+		res.send({ message: "User Address updated successfully" });
 		return;
 	}
 	res.send({ message: "Failed to update User" }).sendStatus(500);
