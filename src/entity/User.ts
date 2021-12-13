@@ -56,6 +56,7 @@ export class User {
 	@CreateDateColumn({
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	created_at: Date;
 
@@ -63,6 +64,7 @@ export class User {
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
 		onUpdate: "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	modified_at: Date;
 }

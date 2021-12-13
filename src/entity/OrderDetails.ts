@@ -32,6 +32,7 @@ export class OrderDetails {
 	@CreateDateColumn({
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	created_at: Date;
 
@@ -39,6 +40,7 @@ export class OrderDetails {
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
 		onUpdate: "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	modified_at: Date;
 }

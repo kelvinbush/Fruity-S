@@ -9,23 +9,25 @@ import { Min } from "class-validator";
 
 @Entity({ name: "product_inventory" })
 export class ProductInventory {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+	@PrimaryGeneratedColumn("uuid")
+	id: string;
 
-  @Column({ nullable: false, type: "int" })
-  @Min(0)
-  quantity: number;
+	@Column({ nullable: false, type: "int" })
+	@Min(0)
+	quantity: number;
 
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-  })
-  created_at: Date;
+	@CreateDateColumn({
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP(6)",
+		select: false,
+	})
+	created_at: Date;
 
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-    onUpdate: "CURRENT_TIMESTAMP(6)",
-  })
-  modified_at: Date;
+	@UpdateDateColumn({
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP(6)",
+		onUpdate: "CURRENT_TIMESTAMP(6)",
+		select: false,
+	})
+	modified_at: Date;
 }

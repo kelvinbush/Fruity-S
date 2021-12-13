@@ -7,24 +7,28 @@ import {
 } from "typeorm";
 import {FavouriteItems} from "./FavouriteItems";
 
-@Entity({name: "favourite"})
+@Entity({ name: "favourite" })
 export class Favourite {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+	@PrimaryGeneratedColumn("uuid")
+	id: string;
 
-    @OneToMany(() => FavouriteItems, (item) => item.favourite, {cascade: ["remove"]})
-    favouriteProducts: Favourite[];
+	@OneToMany(() => FavouriteItems, (item) => item.favourite, {
+		cascade: ["remove"],
+	})
+	favouriteProducts: Favourite[];
 
-    @CreateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)",
-    })
-    createdAt: Date;
+	@CreateDateColumn({
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP(6)",
+		select: false,
+	})
+	createdAt: Date;
 
-    @UpdateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)",
-        onUpdate: "CURRENT_TIMESTAMP(6)",
-    })
-    modifiedAt: Date;
+	@UpdateDateColumn({
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP(6)",
+		onUpdate: "CURRENT_TIMESTAMP(6)",
+		select: false,
+	})
+	modifiedAt: Date;
 }

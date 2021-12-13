@@ -24,6 +24,7 @@ export class ShoppingSession {
 	@CreateDateColumn({
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	createdAt: Date;
 
@@ -31,6 +32,7 @@ export class ShoppingSession {
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
 		onUpdate: "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	modifiedAt: Date;
 }

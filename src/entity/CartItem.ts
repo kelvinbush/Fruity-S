@@ -41,6 +41,7 @@ export class CartItem {
 	@CreateDateColumn({
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	createdAt: Date;
 
@@ -48,6 +49,7 @@ export class CartItem {
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
 		onUpdate: "CURRENT_TIMESTAMP(6)",
+		select: false,
 	})
 	modifiedAt: Date;
 }
