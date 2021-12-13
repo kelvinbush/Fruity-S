@@ -5,7 +5,7 @@ import {
 	removeItemFromCart,
 	getAllCartItems,
 	updateCartItem,
-	allCartGetUpdated,
+	getCartItemsForUser,
 } from "../service/cart.service";
 import logger from "../utils/logger";
 export async function addingToCart(req: Request, res: Response) {
@@ -49,7 +49,7 @@ export async function removeFromCart(req: Request, res: Response) {
 
 export async function getCartItems(req: Request, res: Response) {
 	try {
-		const result = await allCartGetUpdated(req.body.sessionId);
+		const result = await getCartItemsForUser(req.body.sessionId);
 		res.send({ cartItems: result });
 	} catch (e: any) {
 		logger.error("Couldn't delete from cart controller");
