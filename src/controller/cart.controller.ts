@@ -48,10 +48,12 @@ export async function removeFromCart(req: Request, res: Response) {
 
 export async function getCartItems(req: Request, res: Response) {
 	try {
-		const result = await getCartItemsForUser(req.body.sessionId);
+		logger.info(req.body)
+		const result = await getCartItemsForUser(req.body.id);
+		console.log(result);
 		res.send({ cartItems: result });
 	} catch (e: any) {
-		logger.error("Couldn't delete from cart controller");
+		logger.error("Couldn't read from cart controller");
 		logger.error(e.message);
 		res.sendStatus(500);
 		return;
