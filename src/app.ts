@@ -39,7 +39,7 @@ const app = express();
 
 app.use(
 	cors({
-		origin: "http://localhost:3000",
+		origin: "https://nectar-admin-dashboard.herokuapp.com",
 		credentials: true,
 	})
 );
