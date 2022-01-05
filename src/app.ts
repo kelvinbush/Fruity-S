@@ -38,10 +38,10 @@ const port = process.env.PORT || config.get<number>("port");
 const app = express();
 
 app.use(
-    cors({
-        origin: config.get<string>("origin"),
-        credentials: true,
-    })
+	cors({
+		origin: "http://localhost:3000",
+		credentials: true,
+	})
 );
 
 app.use(cookieParser());
