@@ -18,7 +18,7 @@ import {
 
 function routes(app: Express) {
 	app.get("/healthcheck", (req: Request, res: Response) =>
-		res.send({ message: "We ara live baby" })
+		res.send({ message: "We are live baby" })
 	);
 	app.get("/api/me", requireUser, getCurrentUser);
 	app.post("/api/user/address", requireUser, updateUserAddress);
