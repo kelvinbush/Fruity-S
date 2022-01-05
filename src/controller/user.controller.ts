@@ -10,6 +10,7 @@ export async function getCurrentUser(req: Request, res: Response) {
 		if (user) res.send({ user });
 		return;
 	} catch (error: any) {
+		logger.info("could not get user")
 		logger.error(error.message);
 		res.send({ message: "Failed to get User" });
 		return;

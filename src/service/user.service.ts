@@ -25,7 +25,7 @@ const getFirebaseUser = async (uid: string): Promise<FirebaseUser | null> => {
 			displayName: userRecord.displayName,
 		};
 	} catch (e: any) {
-		logger.error(e.message);
+		logger.error("firebase couldn't");
 		return null;
 	}
 };
@@ -62,6 +62,7 @@ export async function findOrCreateUser(input: string): Promise<User | void> {
 					.save(newUser)
 					.catch((err) => console.log(err));
 			}
+			return;
 		}
 	} catch (error: any) {
 		logger.error(error.message);
