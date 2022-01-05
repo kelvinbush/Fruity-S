@@ -15,7 +15,6 @@ import {
 	getCartItems,
 	updateCart,
 } from "./controller/cart.controller";
-import { orderItems } from "./controller/orders.controller";
 
 function routes(app: Express) {
 	app.get("/healthcheck", (req: Request, res: Response) =>
@@ -30,7 +29,6 @@ function routes(app: Express) {
 	app.post("/api/updateCart", requireUser, updateCart);
 	app.delete("/api/updateCart", requireUser, removeFromCart);
 	app.post("/api/getMyCart", requireUser, getCartItems);
-	app.get("/api/order", requireUser, orderItems);
 }
 
 export default routes;
