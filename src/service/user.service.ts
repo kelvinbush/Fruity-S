@@ -32,37 +32,41 @@ const getFirebaseUser = async (uid: string): Promise<FirebaseUser | null> => {
 
 export async function findOrCreateUser(input: string): Promise<User | void> {
 	const userRepository = getRepository(User);
-	const user = await userRepository.findOne({
-		where: { username: input },
-	});
-	if (user) {
-		return user;
-	}
-	if (!user) {
-		const fUser = await getFirebaseUser(input);
-		if (fUser) {
-			const sessionRepo = getRepository(ShoppingSession);
-			const favouriteRepo = getRepository(Favourite);
-			const newShopSesion = new ShoppingSession();
-			newShopSesion.total = 1;
-			const session = await sessionRepo.save(newShopSesion);
-			const favourite = new Favourite();
-			const newFavourite = await favouriteRepo.save(favourite);
-			const newUser = userRepository.create({
-				firstName: fUser.displayName,
-				username: fUser.uid,
-				email: fUser.email,
-				imageUrl: fUser.photoUrl,
-				shoppingSession: session,
-				favourites: newFavourite,
-			});
-
-			return await userRepository
-				.save(newUser)
-				.catch((err) => console.log(err));
+	try {
+		const user = await userRepository.findOne({
+			where: { username: input },
+		});
+		if (user) {
+			return user;
 		}
-		return;
+		if (!user) {
+			const fUser = await getFirebaseUser(input);
+			if (fUser) {
+				const sessionRepo = getRepository(ShoppingSession);
+				const favouriteRepo = getRepository(Favourite);
+				const newShopSesion = new ShoppingSession();
+				newShopSesion.total = 1;
+				const session = await sessionRepo.save(newShopSesion);
+				const favourite = new Favourite();
+				const newFavourite = await favouriteRepo.save(favourite);
+				const newUser = userRepository.create({
+					firstName: fUser.displayName,
+					username: fUser.uid,
+					email: fUser.email,
+					imageUrl: fUser.photoUrl,
+					shoppingSession: session,
+					favourites: newFavourite,
+				});
+
+				return await userRepository
+					.save(newUser)
+					.catch((err) => console.log(err));
+			}
+		}
+	} catch (error:any) {
+		logger.error(error.message)
 	}
+	
 }
 
 type Address = {
