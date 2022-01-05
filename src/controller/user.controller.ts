@@ -6,6 +6,7 @@ export async function getCurrentUser(req: Request, res: Response) {
 	const userId = res.locals.user.uid;
 	try {
 		const user = await findOrCreateUser(userId);
+		res.header("Access-Control-Allow-Origin", "*");
 		if (user) res.send({ user });
 		return;
 	} catch (error: any) {
