@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { get } from "lodash";
 import admin from "firebase-admin";
-import logger from "../utils/logger";
-import config from "config";
+
 
 const deserializeUser = async (
 	req: Request,
