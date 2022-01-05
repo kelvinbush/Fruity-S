@@ -1,4 +1,4 @@
 export default {
 	port: 1446,
-	origin: "http://localhost:3000",
+	origin: "https://nectar-admin-dashboard.herokuapp.com/",
 };
