@@ -63,10 +63,9 @@ export async function findOrCreateUser(input: string): Promise<User | void> {
 					.catch((err) => console.log(err));
 			}
 		}
-	} catch (error:any) {
-		logger.error(error.message)
+	} catch (error: any) {
+		logger.error(error.message);
 	}
-	
 }
 
 type Address = {

@@ -4,13 +4,15 @@ import logger from "../utils/logger";
 
 export async function getCurrentUser(req: Request, res: Response) {
 	const userId = res.locals.user.uid;
-	const user = await findOrCreateUser(userId);
-	if (user) {
-		res.send({ user });
+	try {
+		const user = await findOrCreateUser(userId);
+		if (user) res.send({ user });
+		return;
+	} catch (error: any) {
+		logger.error(error.message);
+		res.send({ message: "Failed to get User" });
 		return;
 	}
-	res.send({ message: "Failed to get User" }).sendStatus(500);
-	return;
 }
 
 export async function updateUserAddress(req: Request, res: Response) {
@@ -22,6 +24,6 @@ export async function updateUserAddress(req: Request, res: Response) {
 		res.send({ message: "User Address updated successfully" });
 		return;
 	}
-	res.send({ message: "Failed to update User" }).sendStatus(500);
+	res.send({ message: "Failed to update User" });
 	return;
 }
