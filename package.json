@@ -40,7 +40,7 @@
     "typeorm": "0.2.38"
   },
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/app.ts",
+    "start": "ts-node-dev --respawn --transpile-only -r dotenv/config src/app.ts",
     "build": "tsc"
   }
 }
