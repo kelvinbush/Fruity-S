@@ -35,7 +35,7 @@ export async function updateCart(req: Request, res: Response) {
 
 export async function removeFromCart(req: Request, res: Response) {
 	try {
-		await removeItemFromCart(req.body.cartId);
+		await removeItemFromCart(req.body.id);
 		res.send({ message: "deletion successfull" });
 		return;
 	} catch (e: any) {
