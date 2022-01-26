@@ -15,10 +15,16 @@ import {
 	getCartItems,
 	updateCart,
 } from "./controller/cart.controller";
+import config from "config";
+import logger from "./utils/logger";
+
+
+const check = config.get<string>("check");
+logger.info(check);
 
 function routes(app: Express) {
 	app.get("/healthcheck", (req: Request, res: Response) =>
-		res.send({ message: "We are live baby 😁😁" })
+		res.send({ message: `We are live baby 😁😁 at ${check}` })
 	);
 	app.get("/api/me", requireUser, getCurrentUser);
 	app.post("/api/user/address", requireUser, updateUserAddress);
