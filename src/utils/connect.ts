@@ -3,7 +3,7 @@ import logger from "./logger";
 
 async function connect() {
     try {
-        const connection = await createConnection();
+        await createConnection();
         logger.info("DB connected");
     } catch (e: any) {
         logger.error("Could not connect to db");
