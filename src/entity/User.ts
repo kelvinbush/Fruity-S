@@ -1,4 +1,6 @@
 import {
+    BeforeInsert,
+    BeforeUpdate,
     Column,
     CreateDateColumn,
     Entity,
@@ -8,12 +10,14 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
+import argon2 from "argon2";
 import {UserAddress} from "./UserAddress";
 import {ShoppingSession} from "./ShoppingSession";
 import {OrderDetails} from "./OrderDetails";
 import {IsEmail} from "class-validator";
 import {Favourite} from "./Favourite";
 import {AuthSession} from "./AuthSession";
+import logger from "../utils/logger";
 
 @Entity({name: "user"})
 export class User {
@@ -21,15 +25,12 @@ export class User {
     id: number;
 
     @Column({nullable: false})
-    firstName: string;
-
-    @Column({default: ""})
-    lastName: string;
+    name: string;
 
     @Column({default: ""})
     imageUrl: string;
 
-    @Column({default: "", nullable: false})
+    @Column({default: "", nullable: false, select: false})
     password: string;
 
     @Column({nullable: false, unique: true})
@@ -72,4 +73,18 @@ export class User {
     })
     modified_at: Date;
 
+    @BeforeInsert()
+    @BeforeUpdate()
+    async hashPassword() {
+        this.password = await argon2.hash(this.password);
+    }
+
+    async comparePassword(candidatePassword: string) {
+        try {
+            return await argon2.verify(this.password, candidatePassword);
+        } catch (e: any) {
+            logger.error("Password Verification Internal Error");
+            return false;
+        }
+    }
 }
