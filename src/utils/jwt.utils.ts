@@ -1,5 +1,6 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import config from "config";
+import logger from "./logger";
 
 export function signJwt(
     object: Object,
@@ -10,7 +11,6 @@ export function signJwt(
         config.get<string>(keyName),
         "base64"
     ).toString("ascii");
-
     return jwt.sign(object, signingKey, {
         ...(options && options),
         algorithm: "RS256",
@@ -29,7 +29,7 @@ export function verifyJwt(token: string, keyName: "accessTokenPublicKey" | "refr
             decoded,
         };
     } catch (e: any) {
-        console.error(e);
+        logger.info(e.message);
         return {
             valid: false,
             expired: e.message === "jwt expired",

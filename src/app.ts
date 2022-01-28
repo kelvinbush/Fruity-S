@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config({path: __dirname + "/.env"});
 import config from "config";
 import admin from "firebase-admin";
 import express from "express";
@@ -9,7 +10,6 @@ import deserializeUser from "./middleware/deserializeUser";
 import cookieParser from "cookie-parser";
 import routes from "./routes";
 
-dotenv.config({path: __dirname + "/.env"});
 
 // @ts-ignore
 let private_key = "";

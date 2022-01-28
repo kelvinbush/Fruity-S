@@ -1,34 +1,21 @@
-import { ShoppingSession } from "../entity/ShoppingSession";
 import { User } from "../entity/User";
-import { getRepository } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import logger from "../utils/logger";
-import { Favourite } from "../entity/Favourite";
+import { UserInput } from "../utils/m-types";
 
-/*type FirebaseUser = {
-  displayName: string | undefined;
-  uid: string | undefined;
-  photoUrl: string | undefined;
-  email: string | undefined;
-  phoneNumber: string | undefined;
-};
-
-const getFirebaseUser = async (uid: string): Promise<FirebaseUser | null> => {
+export async function createUser(input: UserInput) {
+  const { name, email, password } = input;
   try {
-    const userRecord = await admin.auth().getUser(uid);
-    return {
-      email: userRecord.email,
-      phoneNumber: userRecord.phoneNumber,
-      photoUrl: userRecord.photoURL,
-      uid: userRecord.uid,
-      displayName: userRecord.displayName,
-    };
-  } catch (e: any) {
-    logger.error("firebase couldn't");
-    return null;
+    await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values([{ name, email, password }])
+      .execute();
+  } catch (e) {
+    logger.error(e);
   }
-};*/
-
-
+}
 
 export async function validatePassword({
   email,

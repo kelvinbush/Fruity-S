@@ -1,5 +1,5 @@
 import { Express, Request, Response } from "express";
-import { getCurrentUser } from "./controller/user.controller";
+import { createUserHandler } from "./controller/user.controller";
 import requireUser from "./middleware/requireUser";
 import {
   addNewProduct,
@@ -16,7 +16,12 @@ import config from "config";
 import logger from "./utils/logger";
 import validateResource from "./middleware/validateResource";
 import { createAuthSessionSchema } from "./schema/auth-session-schema";
-import { createAuthSessionHandler } from "./controller/auth-session.controller";
+import {
+  createAuthSessionHandler,
+  deleteAuthSessionHandler,
+  getUserAuthSessionsHandler,
+} from "./controller/auth-session.controller";
+import { createUserSchema } from "./schema/createUserSchema";
 
 const check = config.get<string>("check");
 logger.info(check);
@@ -31,8 +36,10 @@ function routes(app: Express) {
     validateResource(createAuthSessionSchema),
     createAuthSessionHandler
   );
+  app.get("/api/sessions", requireUser, getUserAuthSessionsHandler);
+  app.delete("/api/sessions", requireUser, deleteAuthSessionHandler);
+  app.post("/api/users", validateResource(createUserSchema), createUserHandler);
 
-  app.get("/api/me", requireUser, getCurrentUser);
   app.post("/api/product", requireUser, addNewProduct);
   app.get("/api/product", requireUser, getAllProducts);
   app.post("/api/product/update", requireUser, updateItem);
