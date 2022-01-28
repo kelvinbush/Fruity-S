@@ -1,19 +1,20 @@
 import { User } from "../entity/User";
-import { getConnection, getRepository } from "typeorm";
+import { getRepository } from "typeorm";
 import logger from "../utils/logger";
 import { UserInput } from "../utils/m-types";
 
 export async function createUser(input: UserInput) {
   const { name, email, password } = input;
+  const userRepo = getRepository(User);
   try {
-    await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(User)
-      .values([{ name, email, password }])
-      .execute();
-  } catch (e) {
-    logger.error(e);
+    const user = userRepo.create({ name, email, password });
+    await userRepo.save(user);
+  } catch (e: any) {
+    if (e.errno == 1062) {
+      throw new Error("1062");
+    }
+    console.log("after error");
+    throw new Error(e);
   }
 }
 
@@ -35,7 +36,7 @@ export async function getPartialUserByEmail(email: string) {
   try {
     const user = await getRepository(User)
       .createQueryBuilder("user")
-      .select(["user.id", "user.name", "user.email"])
+      .select(["user.id", "user.name", "user.email", "user.password"])
       .where("user.email = :email", { email })
       .getOne();
     if (!user) return false;

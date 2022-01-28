@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { CreateUserInput } from "../schema/createUserSchema";
 import { createUser } from "../service/user.service";
-import logger from "../utils/logger";
 import { UserInput } from "../utils/m-types";
 
 export async function createUserHandler(
@@ -12,7 +11,13 @@ export async function createUserHandler(
     await createUser(req.body as UserInput);
     return res.send(`${req.body.name} added successfully`);
   } catch (e: any) {
-    logger.error(e);
-    return res.status(409).send(e.message);
+    if (e.message == "1062") {
+      return res
+        .status(409)
+        .send({ message: "Could not add user", error: "Email already exists" });
+    }
+    return res
+      .status(500)
+      .send({ message: "Could not add user", error: e.message });
   }
 }

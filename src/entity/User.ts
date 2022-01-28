@@ -1,4 +1,5 @@
 import {
+    BeforeInsert,
     BeforeUpdate,
     Column,
     CreateDateColumn,
@@ -72,6 +73,7 @@ export class User {
     })
     modified_at: Date;
 
+    @BeforeInsert()
     @BeforeUpdate()
     async hashPassword() {
         this.password = await argon2.hash(this.password);
@@ -79,9 +81,7 @@ export class User {
 
     async comparePassword(candidatePassword: string) {
         try {
-            // await argon2.verify(this.password, candidatePassword);
-            logger.info(this.password);
-            return true;
+            return await argon2.verify(this.password, candidatePassword);
         } catch (e: any) {
             logger.error(e.message);
             return false;
