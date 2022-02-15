@@ -7,7 +7,6 @@ import {
 } from "../service/product.service";
 
 export async function addNewProduct(req: Request, res: Response) {
-  logger.info(req.body);
   try {
     const product = await addProductToDB(req.body);
     if (product) res.send({ message: `${product.name} added` });
@@ -23,7 +22,6 @@ export async function getAllProducts(req: Request, res: Response) {
   try {
     const result = await getAllProductsFromDb();
     res.send({ result });
-    // logger.info(result);
     return;
   } catch (e: any) {
     logger.error(e.message);
