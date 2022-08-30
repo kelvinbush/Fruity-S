@@ -19,7 +19,7 @@ export class User {
 	@PrimaryGeneratedColumn("uuid")
 	id: number;
 
-	@Column({ nullable: false })
+	@Column({ default: "" })
 	firstName: string;
 
 	@Column({ default: "" })
