@@ -54,8 +54,6 @@ export async function updateProduct(item: NewProduct) {
 	const productRepo = getRepository(Product);
 	const inventoryRepo = getRepository(ProductInventory);
 	try {
-		logger.info("Found you");
-		logger.info(item);
 		const product = await productRepo.findOne({ where: { id: item.id } });
 		if (product) {
 			let category = await categoryRepository.findOne({

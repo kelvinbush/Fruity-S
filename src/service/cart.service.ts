@@ -1,17 +1,14 @@
+import { ShoppingSession } from "./../entity/ShoppingSession";
+import { User } from "./../entity/User";
 import { CartItem } from "../entity/CartItem";
-import {
-	getRepository,
-	getConnection,
-	getManager,
-} from "typeorm";
+import { getRepository, getConnection, getManager } from "typeorm";
 import logger from "../utils/logger";
 export type CartAdd = {
 	productId: string;
 	quantity: number;
-	sessionId: string;
 };
 
-export async function addToCart(item: CartAdd) {
+export async function addToCart(item: CartAdd, uid: string) {
 	try {
 		return await getConnection()
 			.createQueryBuilder()
@@ -20,7 +17,7 @@ export async function addToCart(item: CartAdd) {
 			.values([
 				{
 					quantity: item.quantity,
-					sessionId: item.sessionId,
+					sessionId: await getSessionId(uid),
 					productId: item.productId,
 				},
 			])
@@ -32,7 +29,18 @@ export async function addToCart(item: CartAdd) {
 	}
 }
 
-export async function getCartItemsForUser(sessionId: string) {
+export async function getSessionId(uid: string) {
+	const userRepo = getRepository(User);
+	try {
+		const user = await userRepo.findOne({ username: uid });
+		const sessionId = user.shoppingSession.id;
+		return sessionId;
+	} catch (e) {
+		logger.error(e);
+	}
+}
+
+export async function getCartItemsForUser(uid: string) {
 	try {
 		return await getManager()
 			.createQueryBuilder(CartItem, "cart")
@@ -44,7 +52,9 @@ export async function getCartItemsForUser(sessionId: string) {
 				"p.imageUrl",
 				"p.price",
 			])
-			.where("cart.sessionId = :sessionId", { sessionId: sessionId })
+			.where("cart.sessionId = :sessionId", {
+				sessionId: await getSessionId(uid),
+			})
 			.getMany();
 	} catch (error) {
 		logger.error("Couldn't get cart items");

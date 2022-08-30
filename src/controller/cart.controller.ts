@@ -9,7 +9,7 @@ import {
 import logger from "../utils/logger";
 export async function addingToCart(req: Request, res: Response) {
 	try {
-		await addToCartService(req.body);
+		await addToCartService(req.body, res.locals.user.uid);
 		res.sendStatus(200);
 		return;
 	} catch (e: any) {
@@ -48,9 +48,7 @@ export async function removeFromCart(req: Request, res: Response) {
 
 export async function getCartItems(req: Request, res: Response) {
 	try {
-		logger.info(req.body)
-		const result = await getCartItemsForUser(req.body.id);
-		console.log(result);
+		const result = await getCartItemsForUser(res.locals.user.uid);
 		res.send({ cartItems: result });
 	} catch (e: any) {
 		logger.error("Couldn't read from cart controller");
