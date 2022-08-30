@@ -27,7 +27,7 @@ function routes(app: Express) {
 	app.post("/api/product/update", requireUser, updateItem);
 	app.post("/api/addCart", requireUser, addingToCart);
 	app.post("/api/updateCart", requireUser, updateCart);
-	app.delete("/api/updateCart", requireUser, removeFromCart);
+	app.post("/api/deleteCart", requireUser, removeFromCart);
 	app.post("/api/getMyCart", requireUser, getCartItems);
 }
 
