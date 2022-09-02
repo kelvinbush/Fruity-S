@@ -8,9 +8,10 @@ export async function getCurrentUser(req: Request, res: Response) {
 	if (user) {
 		res.send({ user });
 		return;
+	} else {
+		res.send({ message: "Failed to get User" }).sendStatus(500);
+		return;
 	}
-	res.send({ message: "Failed to get User" }).sendStatus(500);
-	return;
 }
 
 export async function updateUserAddress(req: Request, res: Response) {
