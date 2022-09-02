@@ -6,9 +6,11 @@ export async function getCurrentUser(req: Request, res: Response) {
 	const userId = res.locals.user.uid;
 	const user = await findOrCreateUser(userId);
 	if (user) {
+		logger.info(user);
 		res.send({ user });
 		return;
 	} else {
+		logger.info("Failed to get user");
 		res.sendStatus(500);
 		return;
 	}
