@@ -7,7 +7,6 @@ export async function getCurrentUser(req: Request, res: Response) {
 	const user = await findOrCreateUser(userId);
 	if (user) {
 		res.send({ user });
-		logger.info(user);
 		return;
 	}
 	res.send({ message: "Failed to get User" }).sendStatus(500);
