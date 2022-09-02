@@ -17,6 +17,7 @@ type FirebaseUser = {
 const getFirebaseUser = async (uid: string): Promise<FirebaseUser | null> => {
 	try {
 		const userRecord = await admin.auth().getUser(uid);
+		logger.info(userRecord.email)
 		return {
 			email: userRecord.email,
 			phoneNumber: userRecord.phoneNumber,
